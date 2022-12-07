@@ -1,0 +1,71 @@
+name: Maven site deployment
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Github environment to use'
+        default: 'deployment_site'
+        required: false
+        type: string
+      branch:
+        description: 'Branch on which the site will be deployed'
+        required: true
+        type: string
+      host:
+        description: 'Host where the site will be deployed'
+        required: true
+        type: string
+    secrets:
+      url:
+        description: 'URL to deploy the site'
+        required: true
+      username:
+        description: 'Username for deploying'
+        required: true
+      password:
+        description: 'Password for deploying'
+        required: true
+
+jobs:
+  setup:
+    name: Preparation
+    outputs:
+      branchName: ${{ steps.extract_branch.outputs.branchName }}
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Register SSH host
+      uses: bernardo-mg/ssh-host-register-action@v1
+      with:
+        host: ${{ inputs.host }}
+    - name: Extract branch name
+      id: extract_branch
+      uses: bernardo-mg/extract-branch-name-action@v1
+
+  deploy:
+    name: Deployment
+    environment: ${{ inputs.environment }}
+    needs: setup
+    if: ${{ needs.setup.outputs.branchName == inputs.branch }}
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check-out
+      uses: actions/checkout@v3
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: 11
+        distribution: 'adopt'
+        cache: 'maven'
+    - name: Set up Maven settings for site deployment
+      uses: bernardo-mg/maven-site-deployment-settings-action@v1
+      with:
+        username: ${{ secrets.username }}
+        password: ${{ secrets.password }}
+        siteUrl: ${{ secrets.url }}
+    - name: Generate docs
+      run: mvn verify site -B -P deployment-site
+    - name: Deploy docs
+      run: mvn site:deploy -B -P deployment-site -DskipTests --settings site_settings.xml
