@@ -16,8 +16,13 @@ Use these files as any reusable workflow:
 ```
 jobs:
   tests:
-    name: Tests
-    uses: Bernardo-MG/github-workflow/.github/workflows/testing.yml@v1
+    name: Tests with JDK ${{ matrix.jdk }}
+    strategy:
+      matrix:
+        jdk: [ 11, 17 ]
+    uses: Bernardo-MG/github-workflow-maven/.github/workflows/testing.yml@v1
+    with:
+      jdk: ${{ matrix.jdk }}
 ```
 
 For an actual usage of these files check the [Library Maven Archetype][archetype].
