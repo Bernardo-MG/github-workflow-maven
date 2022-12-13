@@ -9,7 +9,7 @@ on:
         required: false
         type: string
       profile:
-        description: 'Deployment profile'
+        description: 'Maven profile for deployment'
         default: 'deployment-github'
         required: false
         type: string

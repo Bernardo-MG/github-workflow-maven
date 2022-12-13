@@ -12,6 +12,11 @@ on:
         description: 'Branch on which the site will be deployed'
         required: true
         type: string
+      profile:
+        description: 'Maven profile for site deployment'
+        default: 'deployment-site'
+        required: false
+        type: string
       host:
         description: 'Host where the site will be deployed'
         required: true
@@ -69,6 +74,6 @@ jobs:
         password: ${{ secrets.password }}
         siteUrl: ${{ secrets.url }}
     - name: Generate docs
-      run: mvn verify site -B -P deployment-site
+      run: mvn verify site -B -P ${{ inputs.profile }}
     - name: Deploy docs
-      run: mvn site:deploy -B -P deployment-site -DskipTests --settings site_settings.xml
+      run: mvn site:deploy -B -P ${{ inputs.profile }} -DskipTests --settings site_settings.xml
