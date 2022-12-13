@@ -46,6 +46,9 @@ jobs:
   deploy:
     name: Deployment
     environment: ${{ inputs.environment }}
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: true
     needs: setup
     if: ${{ needs.setup.outputs.branchName == inputs.branch }}
     runs-on: ubuntu-latest

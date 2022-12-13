@@ -21,6 +21,9 @@ on:
 jobs:
   deploy:
     name: Deploy
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     permissions: 
       contents: read
