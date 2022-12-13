@@ -18,6 +18,11 @@ on:
         default: deployment-ossrh
         required: false
         type: string
+      jdk:
+        description: 'JDK version to use'
+        default: 11
+        required: false
+        type: number
     secrets:
       username:
         description: 'Username for deploying'
@@ -47,7 +52,7 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v3
       with:
-        java-version: 11
+        java-version: ${{ input.jdk }}
         distribution: 'adopt'
         cache: 'maven'
         server-id: ${{ inputs.repository }}
