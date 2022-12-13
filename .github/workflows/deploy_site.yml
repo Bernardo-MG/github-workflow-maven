@@ -83,6 +83,7 @@ jobs:
         username: ${{ secrets.username }}
         password: ${{ secrets.password }}
         siteUrl: ${{ secrets.url }}
+        fileName: ${{ inputs.configFile }}
     - name: Generate docs
       run: mvn verify site -B -P ${{ inputs.profile }}
     - name: Deploy docs
