@@ -14,10 +14,15 @@ on:
         required: false
         type: string
       profile:
-        description: 'Deployment profile'
+        description: 'Maven profile for deployment'
         default: deployment-ossrh
         required: false
         type: string
+      jdk:
+        description: 'JDK version to use'
+        default: 11
+        required: false
+        type: number
     secrets:
       username:
         description: 'Username for deploying'
@@ -36,15 +41,18 @@ jobs:
   deploy:
     name: Deploy
     environment: ${{ inputs.environment }}
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
 
     steps:
     - name: Check-out
       uses: actions/checkout@v3
-    - name: Set up JDK
+    - name: Set up JDK ${{ inputs.jdk }}
       uses: actions/setup-java@v3
       with:
-        java-version: 11
+        java-version: ${{ inputs.jdk }}
         distribution: 'adopt'
         cache: 'maven'
         server-id: ${{ inputs.repository }}

@@ -12,10 +12,25 @@ on:
         description: 'Branch on which the site will be deployed'
         required: true
         type: string
+      profile:
+        description: 'Maven profile for site deployment'
+        default: 'deployment-site'
+        required: false
+        type: string
+      configFile:
+        description: 'Maven configuration file for site deployment'
+        default: 'site_settings.xml'
+        required: false
+        type: string
       host:
         description: 'Host where the site will be deployed'
         required: true
         type: string
+      jdk:
+        description: 'JDK version to use'
+        default: 11
+        required: false
+        type: number
     secrets:
       url:
         description: 'URL to deploy the site'
@@ -30,8 +45,6 @@ on:
 jobs:
   setup:
     name: Preparation
-    outputs:
-      branchName: ${{ steps.extract_branch.outputs.branchName }}
     runs-on: ubuntu-latest
 
     steps:
@@ -39,24 +52,24 @@ jobs:
       uses: bernardo-mg/ssh-host-register-action@v1
       with:
         host: ${{ inputs.host }}
-    - name: Extract branch name
-      id: extract_branch
-      uses: bernardo-mg/extract-branch-name-action@v1
 
   deploy:
     name: Deployment
-    environment: ${{ inputs.environment }}
     needs: setup
-    if: ${{ needs.setup.outputs.branchName == inputs.branch }}
+    environment: ${{ inputs.environment }}
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: true
+    if: ${{ github.ref == format('refs/heads/{0}', inputs.branch) }}
     runs-on: ubuntu-latest
 
     steps:
     - name: Check-out
       uses: actions/checkout@v3
-    - name: Set up JDK
+    - name: Set up JDK ${{ inputs.jdk }}
       uses: actions/setup-java@v3
       with:
-        java-version: 11
+        java-version: ${{ inputs.jdk }}
         distribution: 'adopt'
         cache: 'maven'
     - name: Set up Maven settings for site deployment
@@ -65,7 +78,8 @@ jobs:
         username: ${{ secrets.username }}
         password: ${{ secrets.password }}
         siteUrl: ${{ secrets.url }}
+        fileName: ${{ inputs.configFile }}
     - name: Generate docs
-      run: mvn verify site -B -P deployment-site
+      run: mvn verify site -B -P ${{ inputs.profile }}
     - name: Deploy docs
-      run: mvn site:deploy -B -P deployment-site -DskipTests --settings site_settings.xml
+      run: mvn site:deploy -B -P ${{ inputs.profile }} -DskipTests --settings ${{ inputs.configFile }}
