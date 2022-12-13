@@ -55,11 +55,11 @@ jobs:
 
   deploy:
     name: Deployment
+    needs: setup
     environment: ${{ inputs.environment }}
     concurrency:
       group: ${{ github.ref }}
       cancel-in-progress: true
-    needs: setup
     if: ${{ github.ref == format('refs/heads/{0}', inputs.branch) }}
     runs-on: ubuntu-latest
 
