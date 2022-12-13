@@ -11,7 +11,7 @@ on:
 
 jobs:
   unit_test:
-    name: Unit tests with JDK ${{ inputs.jdk }}
+    name: Unit tests
     runs-on: ubuntu-latest
 
     steps:
@@ -27,7 +27,7 @@ jobs:
       run: mvn test
 
   integration_test:
-    name: Integration tests with JDK ${{ inputs.jdk }}
+    name: Integration tests
     needs: unit_test
     runs-on: ubuntu-latest
 
