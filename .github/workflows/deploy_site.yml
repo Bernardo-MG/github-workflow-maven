@@ -60,7 +60,7 @@ jobs:
       group: ${{ github.ref }}
       cancel-in-progress: true
     needs: setup
-    if: ${{ github.ref#refs/heads/ == inputs.branch }}
+    if: ${{ github.ref == format('refs/heads/{0}', inputs.branch) }}
     runs-on: ubuntu-latest
 
     steps:
