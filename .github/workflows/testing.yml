@@ -5,7 +5,7 @@ on:
 
 jobs:
   unit_test:
-    name: Unit tests ${{ matrix.jdk }}
+    name: Unit tests with JDK ${{ matrix.jdk }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -24,7 +24,7 @@ jobs:
       run: mvn test
 
   integration_test:
-    name: Integration tests ${{ matrix.jdk }}
+    name: Integration tests with JDK ${{ matrix.jdk }}
     needs: unit_test
     runs-on: ubuntu-latest
     strategy:
