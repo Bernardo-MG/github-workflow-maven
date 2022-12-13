@@ -45,8 +45,6 @@ on:
 jobs:
   setup:
     name: Preparation
-    outputs:
-      branchName: ${{ steps.extract_branch.outputs.branchName }}
     runs-on: ubuntu-latest
 
     steps:
@@ -54,9 +52,6 @@ jobs:
       uses: bernardo-mg/ssh-host-register-action@v1
       with:
         host: ${{ inputs.host }}
-    - name: Extract branch name
-      id: extract_branch
-      uses: bernardo-mg/extract-branch-name-action@v1
 
   deploy:
     name: Deployment
@@ -65,7 +60,7 @@ jobs:
       group: ${{ github.ref }}
       cancel-in-progress: true
     needs: setup
-    if: ${{ needs.setup.outputs.branchName == inputs.branch }}
+    if: ${{ github.ref == 'refs/heads/' + inputs.branch }}
     runs-on: ubuntu-latest
 
     steps:
