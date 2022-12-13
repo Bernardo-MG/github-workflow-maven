@@ -17,6 +17,11 @@ on:
         default: 'deployment-site'
         required: false
         type: string
+      configFile:
+        description: 'Maven configuration file for site deployment'
+        default: 'site_settings.xml'
+        required: false
+        type: string
       host:
         description: 'Host where the site will be deployed'
         required: true
@@ -76,4 +81,4 @@ jobs:
     - name: Generate docs
       run: mvn verify site -B -P ${{ inputs.profile }}
     - name: Deploy docs
-      run: mvn site:deploy -B -P ${{ inputs.profile }} -DskipTests --settings site_settings.xml
+      run: mvn site:deploy -B -P ${{ inputs.profile }} -DskipTests --settings ${{ inputs.configFile }}
