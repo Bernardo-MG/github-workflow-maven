@@ -42,7 +42,7 @@ jobs:
     name: Deploy
     environment: ${{ inputs.environment }}
     concurrency:
-      group: ${{ github.ref }}
+      group: deploy-${{ inputs.environment }}-${{ github.ref }}
       cancel-in-progress: true
     runs-on: ubuntu-latest
 
