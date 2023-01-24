@@ -27,7 +27,7 @@ jobs:
   deploy:
     name: Deploy
     concurrency:
-      group: ${{ github.ref }}
+      group: deploy-github-${{ github.ref }}
       cancel-in-progress: true
     runs-on: ubuntu-latest
     permissions: 
