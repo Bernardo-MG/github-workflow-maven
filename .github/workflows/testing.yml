@@ -24,7 +24,7 @@ jobs:
         distribution: 'adopt'
         cache: 'maven'
     - name: Run unit tests
-      run: mvn test
+      run: mvn test -fae
 
   integration_test:
     name: Integration tests
@@ -41,4 +41,4 @@ jobs:
         distribution: 'adopt'
         cache: 'maven'
     - name: Run up to integration tests
-      run: mvn verify
+      run: mvn verify -fae
