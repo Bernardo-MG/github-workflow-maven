@@ -43,7 +43,7 @@ jobs:
       uses: actions/setup-java@v4
       with:
         java-version: ${{ inputs.jdk }}
-        distribution: 'adopt'
+        distribution: 'temurin'
         server-id: ${{ inputs.repository }}
         cache: 'maven'
     - name: Package

@@ -55,7 +55,7 @@ jobs:
       uses: actions/setup-java@v4
       with:
         java-version: ${{ inputs.jdk }}
-        distribution: 'adopt'
+        distribution: 'temurin'
         cache: 'maven'
         server-id: ${{ inputs.repository }}
         server-username: MAVEN_USERNAME

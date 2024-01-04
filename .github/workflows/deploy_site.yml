@@ -72,7 +72,7 @@ jobs:
       uses: actions/setup-java@v4
       with:
         java-version: ${{ inputs.jdk }}
-        distribution: 'adopt'
+        distribution: 'temurin'
         cache: 'maven'
     - name: Set up Maven settings for site deployment
       uses: bernardo-mg/maven-site-deployment-settings-action@v1
