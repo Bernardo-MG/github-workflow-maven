@@ -62,7 +62,7 @@ jobs:
         server-password: MAVEN_PASSWORD
         gpg-private-key: ${{ secrets.gpg-private-key }}
         gpg-passphrase: GPG_PASSPHRASE
-    - name: Build
+    - name: Package
       run: mvn clean package -B -P ${{ inputs.profile }} -DskipTests
     - name: Deploy
       run: mvn deploy -B -P ${{ inputs.profile }} -DskipTests
